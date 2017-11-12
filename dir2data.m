@@ -1,14 +1,19 @@
+close all;
+
+% initialize directories
 D=dir('*.mat');
-RGB=dir('*.jpg');
+RGB=dir('*.png');
 
 [n,~]=size(D);
 
-file_name=zeros(n);
+% Initialize matrix
+%file_name=zeros(n);
 depth_cube=zeros(480,640,n);
 r_cube=zeros(480,640,n);
 g_cube=zeros(480,640,n);
 b_cube=zeros(480,640,n);
 
+% Read information from .mat files and rgb images
 for i=1:n
     file_name(i)=struct('rgb',RGB(i).name,'depth',D(i).name);
     depth_mat=load(file_name(i).depth);
@@ -23,6 +28,7 @@ end
 rbg_back=zeros(x,y,3);
 depth_back=zeros(x,y);
 
+% Compute background
 for i=1:x
     for j=1:y
         depth_back(i,j)=median(depth_cube(i,j,:));
@@ -32,5 +38,8 @@ for i=1:x
     end
 end
 
+figure();
 imagesc(depth_back);
-imshow(rbg_back);
+colorbar;
+figure();
+imshow(uint8(rbg_back));
