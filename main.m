@@ -1,0 +1,13 @@
+clear;
+load('CalibrationData.mat');
+[x,y,imseq1]=dir2struct('*h1*.mat','*e1*.png');
+[~,~,imseq2]=dir2struct('*h2*.mat','*e2*.png');
+BG1 = background2(imseq1,numel(imseq1),x*y);
+BG2 = background2(imseq2,numel(imseq2),x*y);
+plot2bg(BG1.depth,BG1.rgb,BG2.depth,BG2.rgb,x,y);
+[xyz1,p1]=trimap(BG1.depth,BG1.rgb,Depth_cam.K,x,y);
+showPointCloud(p1);
+[xyz2,p2]=trimap(BG2.depth,BG2.rgb,Depth_cam.K,x,y);
+showPointCloud(p2);
+[R12,T,ptotal]=getfusedPC(BG1.rgb,xyz1,BG2.rgb,xyz2,x,y);
+showPointCloud(ptotal);
