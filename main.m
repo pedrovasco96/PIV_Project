@@ -7,4 +7,4 @@ BG1 = backgrounD(imseq1,n,x*y);
 BG2 = backgrounD(imseq2,n,x*y);
 %plot2bg(BG1,BG2,x,y);
 [feat_d,fg_px]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n);
-feat_match(imseq1,imseq2,feat_d,fg_px,cam_params,x,y);
+feat_match(imseq1,imseq2,feat_d,fg_px,cam_params,x,y,1);
