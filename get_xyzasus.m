@@ -1,4 +1,4 @@
-function xyz_ret = get_xyz_asus(im_vec, im_orig_size, good_inds, K, alpha, beta)
+function xyz_ret = get_xyzasus(im_vec, im_orig_size, good_inds, K, alpha, beta)
 % im_vec - depth image vectorized (Nx1)
 % im_orig_size - original image size (HxW) : [H, W]
 % goot_inds - indexes of the image that are valid, i.e., different from 0.
