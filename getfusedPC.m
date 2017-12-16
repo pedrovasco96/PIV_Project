@@ -1,8 +1,8 @@
-function [R12,T12]=getfusedPC(img1,img2,cam_params,x,y)
-dep1=load(img1.depth);
-rgb1=imread(img1.rgb);
-dep2=load(img2.depth);
-rgb2=imread(img2.rgb);
+function [R12,T12]=getfusedPC(img1,img2,cam_params,x,y,subfolder)
+dep1=load(strcat(subfolder,'/',img1.depth));
+rgb1=imread(strcat(subfolder,'/',img1.rgb));
+dep2=load(strcat(subfolder,'/',img2.depth));
+rgb2=imread(strcat(subfolder,'/',img2.rgb));
 xyz1 = get_xyzasus(dep1.depth_array(:), [x,y], find(dep1.depth_array), cam_params.Kdepth, 1, 0);
 xyz2 = get_xyzasus(dep2.depth_array(:), [x,y], find(dep2.depth_array), cam_params.Kdepth, 1, 0);
 rgbd1 = get_rgbd(xyz1, rgb1, cam_params.R, cam_params.T, cam_params.Krgb);

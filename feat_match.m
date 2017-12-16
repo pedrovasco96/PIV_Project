@@ -1,5 +1,5 @@
-function feat_match(imseq1,imseq2,feat_d,foreg,cam_params,x,y,img)
-[R12,T12]=getfusedPC(imseq1(img),imseq2(img),cam_params,x,y);
+function feat_match(imseq1,imseq2,feat_d,foreg,cam_params,x,y,subfolder,img)
+[R12,T12]=getfusedPC(imseq1(img),imseq2(img),cam_params,x,y,subfolder);
 sz=numel(feat_d)-1;
 match=struct('feat1',cell(sz,1),'sc1',cell(sz,1),'feat2',cell(sz,1),'sc2',cell(sz,1));
 for i=1:numel(feat_d)-1

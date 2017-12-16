@@ -1,11 +1,11 @@
 close all;
 clear;
 load('cameraparametersAsus.mat');
-subfolder='lab1';
+subfolder='lab2';
 [x,y,imseq1,imseq2]=dir2struct('depth%d_%d.mat','rgb_image%d_%d.png',subfolder);
 n=numel(imseq1);
 BG1 = backgrounD(imseq1,n,x*y,subfolder);
 BG2 = backgrounD(imseq2,n,x*y,subfolder);
 %plot2bg(BG1,BG2,x,y);
 [feat_d,fg_px]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n,cam_params,subfolder);
-feat_match(imseq1,imseq2,feat_d,fg_px,cam_params,x,y,1);
+feat_match(imseq1,imseq2,feat_d,fg_px,cam_params,x,y,subfolder,1);
