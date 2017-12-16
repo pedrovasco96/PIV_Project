@@ -7,5 +7,5 @@ n=numel(imseq1);
 BG1 = backgrounD(imseq1,n,x*y,subfolder);
 BG2 = backgrounD(imseq2,n,x*y,subfolder);
 %plot2bg(BG1,BG2,x,y);
-[feat_d,fg_px]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n,cam_params,subfolder);
-feat_match(imseq1,imseq2,feat_d,fg_px,cam_params,x,y,subfolder,1);
+[feat_d,foreg]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n,cam_params,subfolder);
+feat_match(imseq1,imseq2,feat_d,foreg,cam_params,x,y,subfolder,1);

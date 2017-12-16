@@ -1,6 +1,6 @@
-function [feat_d,fg_px]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n,cam_params,subfolder)
+function [feat_d,foreg]=feat_detect(BG1,BG2,imseq1,imseq2,x,y,n,cam_params,subfolder)
 feat_d=struct('frame_cam_1',cell(n,1),'desc_cam_1',cell(n,1),'frame_cam_2',cell(n,1),'desc_cam_2',cell(n,1));
-fg_px=struct('foreground_cam_1',cell(n,1),'foreground_cam_2',cell(n,1));
+foreg=struct('foreground_cam_1',cell(n,1),'foreground_cam_2',cell(n,1),'obj_cam_1',cell(n,1),'obj_cam_2',cell(n,1));
 figure();
 for i=1:n
     dep1=load(strcat(subfolder,'/',imseq1(i).depth));
@@ -15,12 +15,14 @@ for i=1:n
     rgbd2=get_rgbd(xyz2,rgb2,cam_params.R,cam_params.T,cam_params.Krgb);
     fg1=imfill(imopen(abs(dep1-BG1.*single(logical(dep1)))>100,strel('disk',3)),'holes');
     fg2=imfill(imopen(abs(dep2-BG2.*single(logical(dep2)))>100,strel('disk',3)),'holes');
-    [gix1,giy1]=ind2sub([x,y],find(fg1));
-    [gix2,giy2]=ind2sub([x,y],find(fg2));
-    fg_px(i).foreground_cam_1=cat(2,[gix1,giy1],dep1(fg1));
-    fg_px(i).foreground_cam_2=cat(2,[gix2,giy2],dep2(fg2));
+    labels1=squeeze(bwlabel(fg1,8));
+    labels2=squeeze(bwlabel(fg2,8);
+    fg1_xyz=get_xyzasus(fg1,[x y],find(fg1),cam_params.Kdepth,1,0);
+    fg2_xyz=get_xyzasus(fg2,[x y],find(fg2),cam_params.Kdepth,1,0);
+    foreg(i).foreground_cam_1=cat(2,fg1_xyz,labels1(fg1_xyz));
+    foreg(i).foreground_cam_2=cat(2,fg2_xyz,labels2(fg2_xyz));
     img1=rgb2gray(rgbd1).*uint8(reshape(fg1,[x,y]));
-    img2=rgb2gray(rgbd2).*uint8(reshape(fg1,[x,y]));
+    img2=rgb2gray(rgbd2).*uint8(reshape(fg2,[x,y]));
     imshow(img1);
     [feat_e1,desc1] = vl_sift(single(img1),'PeakThresh',10);
     [feat_e2,desc2] = vl_sift(single(img2),'PeakThresh',10);
