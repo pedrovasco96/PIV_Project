@@ -8,9 +8,9 @@ xyz2 = get_xyzasus(dep2.depth_array(:), [x,y], find(dep2.depth_array), cam_param
 rgbd1 = get_rgbd(xyz1, rgb1, cam_params.R, cam_params.T, cam_params.Krgb);
 rgbd2 = get_rgbd(xyz2, rgb2, cam_params.R, cam_params.T, cam_params.Krgb);
 figure();
-imshow(uint8(reshape(rgb1,[x y 3])));
+imshow(uint8(reshape(rgbd1,[x y 3])));
 [u1,v1]=ginput(6);
-imshow(uint8(reshape(rgb2,[x y 3])));
+imshow(uint8(reshape(rgbd2,[x y 3])));
 [u2,v2]=ginput(6);
 %[u1,v1,u2,v2]=fix([u1,v1,u2,v2]);
 hold on;
