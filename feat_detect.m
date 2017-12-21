@@ -18,10 +18,12 @@ for i=1:n
     xyz2=get_xyzasus(dep2(:),[x y],find(dep2),cam_params.Kdepth,1,0);
     rgbd1=get_rgbd(xyz1,rgb1,cam_params.R,cam_params.T,cam_params.Krgb);
     rgbd2=get_rgbd(xyz2,rgb2,cam_params.R,cam_params.T,cam_params.Krgb);
-    fg1=bwareaopen(imfill(imopen(abs(dep1-bg1)>200,strel('disk',3)),'holes'),200);
-    fg2=bwareaopen(imfill(imopen(abs(dep2-bg2)>200,strel('disk',3)),'holes'),200);
+    fg1=imfill(imopen(abs(dep1-bg1)>200,strel('disk',3)),'holes');
+    fg2=imfill(imopen(abs(dep2-bg2)>200,strel('disk',3)),'holes');
     fg1(Dep1>200)=0;
     fg2(Dep2>200)=0;
+    fg1=bwareaopen(fg1,200);
+    fg2=bwareaopen(fg2,200);
 %     imshow(fg1);
     img1=rgb2gray(rgbd1).*uint8(fg1);
     img2=rgb2gray(rgbd2).*uint8(fg2);
