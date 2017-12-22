@@ -2,7 +2,7 @@ close all;
 clear;
 load('cameraparametersAsus.mat');
 subfolder='lab2';
-img=20;
+img=1;
 [x,y,imseq1,imseq2]=dir2struct('depth%d_%d.mat','rgb_image%d_%d.png',subfolder);
 [R21,T21]=getransactf(imseq1(img),imseq2(img),cam_params,x,y,subfolder);
 % [R21,T21]=getfusedPC(imseq1(img),imseq2(img),cam_params,x,y,subfolder);

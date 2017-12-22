@@ -1,4 +1,4 @@
-function [R12,T12]=getfusedPC(img1,img2,cam_params,x,y,subfolder)
+function [R21,T21]=getfusedPC(img1,img2,cam_params,x,y,subfolder)
 dep1=load(strcat(subfolder,'/',img1.depth));
 rgb1=imread(strcat(subfolder,'/',img1.rgb));
 dep2=load(strcat(subfolder,'/',img2.depth));
