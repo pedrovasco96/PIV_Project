@@ -7,7 +7,9 @@ else
 end
 sz=numel(a);
 xyztest1=cell(imsamples,1);
+uvtest1=cell(imsamples,1);
 xyztest2=cell(imsamples,1);
+uvtest2=cell(imsamples,1);
 for i=1:sz
     num=a(i);
     dep1=load(strcat(subfolder,'/',is1(num).depth));
@@ -30,17 +32,24 @@ for i=1:sz
     [matchfeats,~] = vl_ubcmatch(desc1, desc2);
     u1=feat_e1(sub2ind(size(feat_e1),ones(numel(matchfeats)/2,1),matchfeats(1,:)'));
     v1=feat_e1(sub2ind(size(feat_e1),2*ones(numel(matchfeats)/2,1),matchfeats(1,:)'));
+    uvtest1{i}=[u1 v1];
     u2=feat_e2(sub2ind(size(feat_e2),ones(numel(matchfeats)/2,1),matchfeats(2,:)'));
     v2=feat_e2(sub2ind(size(feat_e2),2*ones(numel(matchfeats)/2,1),matchfeats(2,:)'));
+    uvtest2{i}=[u2 v2];
     xyztest1{i}=xyz1(sub2ind([x y],round(u1),round(v1)),:);
     xyztest2{i}=xyz2(sub2ind([x y],round(u2),round(v2)),:);
 end
 xyztest1=cell2mat(xyztest1);
+uvtest1=cell2mat(uvtest1);
 xyztest2=cell2mat(xyztest2);
-pc1=pcdownsample(pcdenoise(pointCloud(xyztest1)),'gridAverage',0.1);
-pc2=pcdownsample(pcdenoise(pointCloud(xyztest2)),'gridAverage',0.1);
-[tform,tformed,err]=pcregrigid(pc2,pc1);
-pcshow(pcmerge(pc1,tformed,0.001));
+uvtest2=cell2mat(uvtest2);
+[~,inliers]=estimateFundamentalMatrix(uvtest1,uvtest2);
+pc1=pointCloud(xyztest1(inliers,:));
+pc2=pointCloud(xyztest2(inliers,:));
+[tform,~,err]=pcregrigid(pc2,pc1,'MaxIterations',500);
+pcog1=pointCloud(xyz1,'Color',reshape(rgbd1,[x*y 3]));
+pc2in1=pctransform(pointCloud(xyz2,'Color',reshape(rgbd2,[x*y 3])),tform);
+pcshow(pcmerge(pcog1,pc2in1,0.001));
 disp(err);
 R21=tform.T(1:3,1:3)';
 T21=tform.T(4,1:3)';

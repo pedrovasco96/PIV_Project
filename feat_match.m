@@ -1,8 +1,8 @@
-function feat_match(feat_d,foreg)
-sz=numel(feat_d)-1;
-trackedobj=cell(sz+1,4);
+function objects=feat_match(feat_d,foreg)
+sz=numel(feat_d);
+trackedobj=cell(sz,4);
 num_tr_objs=0;
-for i=1:sz
+for i=1:(sz-1)
     matchfeat1 = vl_ubcmatch(feat_d(i).desc_cam_1, feat_d(i+1).desc_cam_1);
     matchfeat2 = vl_ubcmatch(feat_d(i).desc_cam_2, feat_d(i+1).desc_cam_2);
     matches1=size(matchfeat1(1,:));
@@ -46,6 +46,7 @@ for i=1:sz
                 [dup,freq]=mode(nonzeros(matching_objs));
             end
         end
+        
         if ~isempty(cam2only_now)
             matched2_objs=unique(cam2only_next);
             matching2_objs=zeros(1,numel(matched2_objs));
@@ -120,5 +121,49 @@ for i=1:sz
             num_tr_objs=num_tr_objs+sum(nobjs2);
         end
     end
+end
+objects=struct('X',cell(num_tr_objs,1),'Y',cell(num_tr_objs,1),'Z',cell(num_tr_objs,1),'frames_tracked',cell(num_tr_objs,1));
+for i=1:num_tr_objs
+    objframe=zeros(sz,1);
+    objlabel=zeros(sz,2);
+    for j=1:sz
+        [frame,obj]=ismember(i,trackedobj{j,1});
+        [frame2,obj2]=ismember(i,trackedobj{j,3});
+        if sum(frame)
+            objframe(j)=1;
+            label=trackedobj{j,2};
+            objlabel(j,1)=label(obj);
+        end
+        if sum(frame2)
+            objframe(j)=1;
+            label=trackedobj{j,4};
+            objlabel(j,2)=label(obj2);
+        end
+    end
+    fr_detected=find(objframe);
+    objects(i).frames_tracked=fr_detected';
+    objX=zeros(numel(fr_detected),8);
+    objY=zeros(numel(fr_detected),8);
+    objZ=zeros(numel(fr_detected),8);
+    for j=1:numel(fr_detected)
+        fr=fr_detected(j);
+        [lbl,cam]=max(objlabel(fr,:),[],2);
+        Y=zeros(1,8);
+        if cam==1
+            XYZ=foreg(fr).foreground_cam_1{lbl};
+        else
+            XYZ=foreg(fr).foreground_cam_2{lbl};
+        end
+        objX(j,1:4)=XYZ(1);
+        objX(j,5:8)=XYZ(4);
+        Y([1 2 5 6])=XYZ(2);
+        Y([3 4 7 8])=XYZ(5);
+        objY(j,:)=Y;
+        objZ(j,1:2:7)=XYZ(3);
+        objZ(j,2:2:8)=XYZ(6);
+    end
+    objects(i).X=objX;
+    objects(i).Y=objY;
+    objects(i).Z=objZ;
 end
 end
