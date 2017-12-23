@@ -1,4 +1,4 @@
-function [feat_d,foreg,matches]=feat_detect(BG1,BG2,R12,T12,imseq1,imseq2,x,y,n,cam_params,subfolder)
+function [feat_d,foreg,matches]=feat_detect(BG1,BG2,R21,T21,imseq1,imseq2,x,y,n,cam_params,subfolder)
 feat_d=struct('frame_cam_1',cell(n,1),'desc_cam_1',cell(n,1),'frame_cam_2',cell(n,1),'desc_cam_2',cell(n,1));
 foreg=struct('foreground_cam_1',cell(n,1),'foreground_cam_2',cell(n,1),'objs2to1',cell(n,1));
 bg1=reshape(BG1,[x y]);
@@ -59,7 +59,7 @@ for i=1:n
         A=cell2mat(ConComp2.PixelIdxList(1,j));
         foreg(i).foreground_cam_2{j}=[max(xyz2(A,:),[],1),min(xyz2(A,:),[],1)];
         centr2=mean(xyz2(A,:))';
-        centr2=R12*centr2+T12';
+        centr2=R21*centr2+T21';
         dist2cent=zeros(1,ConComp1.NumObjects);
         for k=1:ConComp1.NumObjects
             dist2cent(1,k)=norm(centr2-centr1(k,:)');
